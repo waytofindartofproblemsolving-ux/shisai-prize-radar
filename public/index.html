@@ -1,5 +1,79 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#315b44"><meta name="description" content="寻找免费参与、有现金奖励的小众比赛。数学建模复现、科学计算案例和轻量开发优先。"><title>拾赛 · 小众赛事雷达</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head><body>
-<aside class="sidebar"><a href="/" class="brand"><span class="brand-icon">◉</span><span>拾赛<small>PRIZE RADAR</small></span></a><div class="workspace">我的赛事工作台 <span>个人</span></div><nav aria-label="主要导航"><button data-view="radar" class="selected"><span>◎</span>赛事雷达<i class="nav-dot"></i></button><button data-view="sources"><span>◷</span>信息源</button><button data-view="saved"><span>♧</span>我的收藏<b id="saved-count">0</b></button></nav><div class="side-note"><span>✧</span><strong>把精力花在<br>值得的比赛上。</strong><p>免费参与，现金奖励。<br>从一个好完成的小题目开始。</p><i></i></div><div class="side-bottom"><button data-view="settings">⚙ <span>偏好与接入</span></button><div class="profile"><span>H</span><div>个人工作空间<small>首版 · 信息源已整理</small></div><i></i></div></div></aside>
-<div class="main-wrap"><header><div class="breadcrumb">工作台 <span>›</span> <strong id="breadcrumb">赛事雷达</strong></div><div class="header-right"><span id="today"></span><span class="header-note">/ &nbsp; 发现好机会</span><span class="avatar">H</span><button class="mobile-settings" data-view="settings" aria-label="偏好与接入">⚙</button></div></header><main id="main"><div class="loading">正在加载赛事线索…</div></main><footer><span>◉ &nbsp; 拾赛 · 给每一份投入一个好方向</span><span>先发现，再核实，再决定。</span></footer></div>
-<dialog id="dialog"><button class="close" aria-label="关闭弹窗">×</button><div id="dialog-content"></div></dialog><div id="toast" role="status" hidden></div>
-</body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f7f3">
+<meta name="description" content="只列数学建模、编程、数据分析和 AI 应用类比赛：名称、内容、日期、奖金、官网和已核实费用。">
+<title>拾赛 · 线上能做完的比赛</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/style.css">
+<script src="/app.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand-row">
+      <a class="brand" href="/">拾赛<span>SHISAI</span></a>
+      <span class="brand-note">免费优先 · 线上优先 · 费用逐条核实</span>
+    </div>
+    <h1>只列线上能做完的比赛。</h1>
+    <p class="lede">数学建模、编程、数据分析、AI 应用。每条都写清日期、奖金、官网和费用；<strong>免费必须有当届通知依据</strong>，收费直接写金额。</p>
+    <div class="meta" id="meta" aria-live="polite">正在读取赛事表…</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="now" id="now" hidden aria-label="近期可报"></section>
+  <section class="now awards" id="awards" hidden aria-label="获奖率已知"></section>
+
+  <section class="table-section">
+    <div class="section-head">
+      <h2>赛事表</h2>
+      <span id="table-note">按报名时间排</span>
+    </div>
+    <div class="table-wrap">
+      <table id="competitions">
+        <thead>
+          <tr>
+            <th scope="col">比赛</th>
+            <th scope="col">主要内容</th>
+            <th scope="col">日期</th>
+            <th scope="col">奖金</th>
+            <th scope="col">费用</th>
+            <th scope="col">官网</th>
+          </tr>
+        </thead>
+        <tbody id="rows">
+          <tr><td colspan="6" class="loading">正在加载…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-foot">“免费”指当届通知明确不收费；“收费”写明已知金额；“待核实”是官网没写、报名时要确认。官网没写不等于免费。认定表里的文学、外语、艺术、法律、医学、硬件赛和线下初赛项已剔除，考试型比赛不收。2027 年日期按 2026 赛程预告，报名前以官网为准；标“需校赛”的先走校内选拔，没标的通常可直接报名。AI 使用规则各赛不同，提交前看当届规则。</p>
+  </section>
+
+  <details class="sources" id="sources" open>
+    <summary>
+      <span>信息源与监测</span>
+      <small id="source-count">正在加载…</small>
+    </summary>
+    <div class="sources-body">
+      <div class="sources-head">
+        <p id="monitor-note">读取上次检查结果…</p>
+        <button id="check" type="button">检查更新</button>
+      </div>
+      <div class="source-grid" id="source-grid"></div>
+      <div class="more-sources" id="more-sources" hidden></div>
+      <p class="sources-foot">直接访问被拦时，会自动尝试 r.jina.ai 阅读代理；仍失败的显示“需人工”。公众号、小红书只作线索入口，不自动抓取；平台页变化不等于有新比赛，需回官网确认。页面内“检查更新”只影响本次浏览；要保存基线，运行 npm run monitor。</p>
+    </div>
+  </details>
+</main>
+
+<footer class="bottom">
+  <div class="wrap">
+    <span>拾赛 · 给每一份投入一个好方向</span>
+    <span>费用与日期以当届官方通知为准 · 更新 <time id="updated">2026-10-23</time></span>
+  </div>
+</footer>
+</body>
+</html>

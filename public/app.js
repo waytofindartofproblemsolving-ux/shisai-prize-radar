@@ -1,36 +1,253 @@
-const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const safeUrl=v=>{try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?esc(u.href):'#';}catch{return '#';}};
-const external=(url,title,cls='')=>`<a class="${cls}" href="${safeUrl(url)}" target="_blank" rel="noopener noreferrer">${esc(title)} ↗</a>`;
-const read=(k,f)=>{try{return JSON.parse(localStorage.getItem('shisai:'+k))??f;}catch{return f;}};
-const save=(k,v)=>{try{localStorage.setItem('shisai:'+k,JSON.stringify(v));}catch{toast('浏览器存储不可用；本次更改仅保留到关闭页面。');}};
-const state={view:'radar',tab:'current',query:'',category:'全部类型',zero:false,sort:'fit',saved:read('saved',[]),imports:read('imports',[]),scans:read('scans',{}),data:null,api:null,busy:false,analysis:null};
-if(!Array.isArray(state.saved))state.saved=[];if(!Array.isArray(state.imports))state.imports=[];else state.imports=state.imports.filter(c=>c&&typeof c.id==='string'&&typeof c.title==='string'&&typeof c.url==='string');
-if(!state.scans||typeof state.scans!=='object'||Array.isArray(state.scans))state.scans={};
-const today=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai'}).format(new Date());
-const archived=c=>c.historical||(c.deadline&&c.deadline<today);
-const zeroCost=c=>c.fee==='free'&&c.noExtraCost===true;
-const all=()=>[...state.imports,...state.data.competitions];
-const active=()=>all().filter(c=>!archived(c));
-const money=n=>'¥ '+Number(n).toLocaleString('zh-CN');
-let toastTimer;function toast(t){$('#toast').textContent=t;$('#toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').hidden=true,6500);}
-function navigate(view){state.view=view;state.query='';render();}
-function heading(title,sub,action=''){return `<section class="heading"><div><div class="eyebrow">LESS NOISE. BETTER OPPORTUNITIES.</div><h1>${title}</h1><p>${sub}</p></div>${action}</section>`;}
-const addButton='<button class="primary" data-action="add"><span class="plus">＋</span>添加线索</button>';
-function render(){if(!state.data)return;const labels={radar:'赛事雷达',sources:'信息源',saved:'我的收藏',settings:'偏好与接入'};$('#breadcrumb').textContent=labels[state.view];$('#today').textContent=today.replaceAll('-','.');$('#saved-count').textContent=state.saved.length;$$('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===state.view));$('#main').innerHTML=state.view==='sources'?sourceView():state.view==='settings'?settingsView():radarView();if(state.view==='radar'||state.view==='saved')renderCards();}
-function radarView(){return heading(state.view==='saved'?'值得继续关注的比赛。':'好比赛，不一定在热榜上。',state.view==='saved'?'把感兴趣的线索留下，再逐项核实。收藏保存在当前浏览器。':'从数学建模复现到轻量开发，寻找投入可控、有现金奖励的机会。',addButton)+(state.view==='radar'?`<section class="focus"><div class="focus-copy"><div class="focus-kicker">当前关注方向</div><h2>复现一个模型，<br>发现下一个机会。</h2><p>优先数学建模 · 科学计算案例 · 现有代码迁移</p><button data-action="math">看看这类比赛 <span>→</span></button></div><div class="radar" aria-hidden="true"><div class="grid"></div><div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div><div class="beam"></div><i class="point center"></i><i class="point p1"></i><i class="point p2"></i><i class="point p3"></i><div class="radar-label l1"><i>ƒ</i>数学建模</div><div class="radar-label l2">✓ &nbsp;零成本优先</div><span class="radar-caption">A SMALLER FIELD. A CLEARER GOAL.</span></div></section>`:'')+`<section class="stats" aria-label="线索概况"><div class="stat"><span class="stat-icon">▱</span><p>当前候选线索<strong>${String(active().length).padStart(2,'0')}<small> 条</small></strong></p><span class="stat-note">尚需核实</span></div><div class="stat"><span class="stat-icon">♧</span><p>确认全程零成本<strong>${String(active().filter(zeroCost).length).padStart(2,'0')}<small> 场</small></strong></p><span class="stat-note">严格口径</span></div><div class="stat"><span class="stat-icon">◷</span><p>已整理信息源<strong>${String(state.data.sources.length).padStart(2,'0')}<small> 个</small></strong></p><button data-view="sources">查看 ↗</button></div></section><section><div class="list-heading"><h2>${state.view==='saved'?'收藏的线索':'赛事线索'}<span class="count" id="count"></span></h2><span class="verified">人工核实于 ${state.data.verifiedDate.replaceAll('-','.')}</span></div><div class="controls"><div class="tabs">${(state.view==='radar'?[['current','当前候选'],['archive','历史参考'],['all','全部线索']]:[['all','我的收藏']]).map(([t,l])=>`<button data-tab="${t}" class="${state.tab===t||state.view==='saved'?'active':''}">${l}</button>`).join('')}</div><label class="search">⌕ <input id="search" type="search" aria-label="搜索比赛" value="${esc(state.query)}" placeholder="搜索比赛、关键词…"></label></div><div class="filters"><span aria-hidden="true">☷</span><select id="category" aria-label="比赛类型">${['全部类型','数学建模','科学计算','轻量开发','底层优化','待分类'].map(c=>`<option ${c===state.category?'selected':''}>${c}</option>`).join('')}</select><label><input id="zero" type="checkbox" ${state.zero?'checked':''}>仅确认零成本</label><select id="sort" class="sort" aria-label="排序方式">${[['fit','按方向匹配排序'],['deadline','按截止日期排序'],['prize','按单项现金奖排序']].map(([v,l])=>`<option value="${v}" ${v===state.sort?'selected':''}>${l}</option>`).join('')}</select></div><div id="cards"></div><div class="list-note">ⓘ &nbsp; 小众不代表容易获奖。费用未知不进入零成本清单；现金、奖品与累计奖励分别记录。</div></section>`;}
-function renderCards(){const ranks={high:3,medium:2,low:1};const list=all().filter(c=>{if(state.view==='saved'&&!state.saved.includes(c.id))return false;if(state.view==='radar'&&state.tab==='current'&&archived(c))return false;if(state.view==='radar'&&state.tab==='archive'&&!archived(c))return false;if(state.zero&&!zeroCost(c))return false;if(state.category!=='全部类型'&&c.category!==state.category)return false;return(c.title+c.summary+c.source).toLowerCase().includes(state.query.toLowerCase());}).sort((a,b)=>state.sort==='prize'?(b.prize??0)-(a.prize??0):state.sort==='deadline'?(a.deadline||'9999').localeCompare(b.deadline||'9999'):(ranks[b.fit]||0)-(ranks[a.fit]||0));$('#count').textContent=list.length;$('#cards').innerHTML=list.length?`<div class="cards">${list.map(card).join('')}</div>`:`<div class="empty"><span>◎</span><h3>${state.zero?'目前没有确认全程零成本的比赛':'暂时没有匹配的线索'}</h3><p>${state.zero?'报名免费不等于全程免费。费用证据不足的项目留在待核实线索中。':'试试其他关键词，或者添加一条你看到的比赛公告。'}</p><button class="secondary" data-action="reset">查看全部线索</button></div>`;}
-function card(c){const saved=state.saved.includes(c.id);return `<article class="card ${c.fit==='high'?'high':''}"><div class="card-top"><span class="category">${c.category==='数学建模'?'ƒ':'▱'} &nbsp; ${esc(c.category)}</span><button class="bookmark ${saved?'saved':''}" data-save="${esc(c.id)}" aria-label="${saved?'取消收藏':'收藏'}：${esc(c.title)}" aria-pressed="${saved}">${saved?'★':'☆'}</button></div><button class="card-title" data-detail="${esc(c.id)}">${esc(c.title)}</button><p class="summary">${esc(c.summary)}</p><div class="tags"><span class="tag ${zeroCost(c)?'green':'amber'}">${zeroCost(c)?'零成本已确认':'费用待核实'}</span><span class="tag ${archived(c)?'gray':'blue'}">${archived(c)?'历史参考 · 不可报名':c.deadline?'当前赛期':'日期待核实'}</span>${c.fit==='high'?'<span class="tag green">方向很匹配</span>':''}</div><div class="prize-row"><div class="prize">${c.prize?money(c.prize):'奖金待核实'}<small>${esc(c.prizeLabel)}</small></div><div class="deadline">◷ ${c.deadline?esc(c.deadline.slice(5).replace('-',' / '))+' 截止':'日期见说明'}</div></div><div class="card-footer"><span>${esc(c.source)}</span>${external(c.url,'查看原文')}</div><button class="details" data-detail="${esc(c.id)}">费用、奖励和任务说明 ›</button></article>`;}
-function sourceView(){return heading('好线索，从这里开始。','公众号与社区发现机会，官方公告核实条件。',`<button class="primary" data-action="scan" ${state.busy?'disabled':''}><span class="${state.busy?'spinning':''}">↻</span>${state.busy?'正在检查…':'检查公开网页'}</button>`)+`<div class="info"><strong>已整理 6 个入口，其中 3 个支持手动检查。</strong><br>网页检查比对正文变化并提取公告链接；首次建立基线。公众号、小红书未接入文章流，关闭页面后不会自动检查。</div><div class="cards">${state.data.sources.map(s=>`<article class="card source-card"><div class="source-top"><span class="source-icon">◷</span><span class="priority">${esc(s.priority)}</span></div><h2>${esc(s.name)}</h2><span class="platform">${esc(s.platform)}</span><p>${esc(s.description)}</p><div class="keywords">${s.keywords.map(k=>`<span># ${esc(k)}</span>`).join('')}</div><div class="source-status">● ${s.monitorUrl?'公开网页 · 可手动检查':'手动发现 · 未自动采集'}</div><small class="proof">${esc(s.verified)}</small>${scanResult(s.id)}${external(s.url,s.id==='xiaohongshu'?'打开关键词搜索':s.id==='shiyuan'?'查看账号出处':'打开信息源','source-link')}</article>`).join('')}</div>`;}
-function scanResult(id){const s=state.scans[id];if(!s)return '';return `<div class="scan-result ${s.status==='error'?'error':''}"><strong>${esc(({baseline:'已建立首次基线',changed:'发现页面变化',unchanged:'页面正文无变化',error:'本次检查未成功'})[s.status]||s.status)}</strong><small>${esc(new Date(s.checkedAt).toLocaleString('zh-CN'))} ${esc(s.message||'')}</small>${(s.links||[]).slice(0,3).map(l=>external(l.url,l.title)).join('')}</div>`;}
-function settingsView(){return heading('只留值得投入的机会。','首版围绕你的参赛偏好筛选，DeepSeek 等待接入。')+`<div class="cards"><section class="settings-card"><span>☷</span><h2>筛选原则</h2>${[['全程零成本','报名、评审、必需工具与算力、硬件和差旅均需核实。有费用或证据不足，不能确认合格。'],['数学建模与案例复现优先','历年题目迁移、数据分析、科学计算、轻量应用。底层优化和大型训练任务降优先级。'],['看单项现金奖与名额','不将总奖池、算力券或多轮累计奖金当作单次可得现金。不根据阅读量推断参赛人数。']].map(([l,t])=>`<div class="rule"><span>✓</span><div><strong>${l}</strong><p>${t}</p></div></div>`).join('')}</section><section class="settings-card"><span>✧</span><h2>DeepSeek</h2><span class="tag ${state.api?.configured?'green':'amber'}">${state.api===null?'连接状态未取得':state.api.configured?'服务端已配置':'等待 API Key'}</span><p>接通后，可在“添加线索”中提取公告摘要、奖励条件、费用与任务难点。原文信息不足时保留为待核实。</p><div class="integration"><div>密钥位置<b>仅服务端环境变量</b></div><div>当前模型<b>${esc(state.api?.model||'待获取')}</b></div><div>定时采集<b>尚未启用</b></div></div><small>本页不接收或保存 API Key。模型调用可能产生 API 费用，未配置时不会调用。</small></section></div><section class="storage"><div><h2>你的线索与收藏</h2><p>手动线索、收藏和网页检查记录保存在当前浏览器；预置赛事随网站版本更新。</p></div><button class="secondary" data-action="export">↓ 导出备份</button></section>`;}
-function openDetail(id){const c=all().find(c=>c.id===id);if(!c)return;$('#dialog-content').innerHTML=`<div class="eyebrow">赛事核实记录</div><h2>${esc(c.title)}</h2><p class="dialog-summary">${esc(c.summary)}</p>${[['赛程',c.dateNote+(c.deadline?' · '+c.deadline:'')],['现金奖励',c.prizeNote],['参赛成本',c.costNote],['方向匹配（判断）',c.fitReason],['参赛规模',c.crowd],['AI 相关说明',c.aiNote]].map(([l,t])=>`<div class="detail-block"><strong>${l}</strong><p>${esc(t)}</p></div>`).join('')}<div class="references"><strong>核实出处 · ${esc(c.checked)}</strong>${(c.references||[]).map(r=>external(r.url,r.title)).join('')}</div>${external(c.url,'查看比赛原文','primary')}`;$('#dialog').showModal();}
-function openAdd(){state.analysis=null;$('#dialog-content').innerHTML=`<form id="add-form"><div class="eyebrow">留住一个好线索</div><h2>添加比赛公告</h2><p class="dialog-summary">从公众号、小红书或官网复制原文链接与公告正文。</p><label class="field">比赛名称<input name="title" required maxlength="120" placeholder="例如：科学计算案例开发挑战赛"></label><label class="field">原文网址<input name="url" type="url" required maxlength="2000" placeholder="https://…"></label><label class="field">公告正文<textarea name="text" rows="6" maxlength="18000" placeholder="粘贴主要内容、奖金、报名条件与截止日期…"></textarea></label><button type="button" class="secondary full" data-action="analyze" ${state.api?.configured?'':'disabled'}>✧ ${state.api?.configured?'用 DeepSeek 提取摘要':'DeepSeek 等待 API Key，仍可手动保存'}</button><div id="analysis"></div><button class="primary full" type="submit">保存为待核实线索 →</button><small>保存在当前浏览器。未点击分析时，原文不会发送给模型。</small></form>`;$('#dialog').showModal();}
-async function scan(){if(state.busy)return;state.busy=true;render();try{const r=await fetch('/api/check',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});const d=await r.json();if(!r.ok)throw new Error(d.error||'检查失败');let ok=0;for(const item of d.results){const prev=state.scans[item.id];if(item.status==='ok'){ok++;item.status=!prev?.fingerprint?'baseline':prev.fingerprint===item.fingerprint?'unchanged':'changed';}else if(prev?.fingerprint)item.fingerprint=prev.fingerprint;state.scans[item.id]=item;}save('scans',state.scans);toast(`已检查 ${d.results.length} 个网页，${ok} 个成功。网页变化需人工核实，不会自动改写比赛信息。`);}catch(e){toast(e.message||'网络暂时不可用');}finally{state.busy=false;render();}}
-async function analyze(button){const form=new FormData($('#add-form'));const text=form.get('text');if(!text.trim())return toast('请先粘贴公告正文。');button.disabled=true;button.textContent='正在提取…';try{const r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,url:form.get('url')})});const d=await r.json();if(!r.ok)throw new Error(d.error||'分析失败');state.analysis=d;$('#analysis').innerHTML=`<div class="analysis"><strong>AI 初步提取 · 尚未人工核实</strong><p>${esc(d.summary)}</p><p>${esc(d.costNote)}</p></div>`;if(!$('#add-form [name=title]').value)$('#add-form [name=title]').value=d.title;}catch(e){toast(e.message||'分析失败');}finally{button.disabled=false;button.textContent='✧ 用 DeepSeek 重新提取';}}
-document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.view)return navigate(b.dataset.view);if(b.dataset.tab){state.tab=b.dataset.tab;return render();}if(b.dataset.detail)return openDetail(b.dataset.detail);if(b.dataset.save){const id=b.dataset.save;state.saved=state.saved.includes(id)?state.saved.filter(x=>x!==id):[...state.saved,id];save('saved',state.saved);return render();}switch(b.dataset.action){case 'add':return openAdd();case 'math':state.tab='all';state.category='数学建模';state.zero=false;return render();case 'reset':state.zero=false;state.query='';state.category='全部类型';state.tab='all';return render();case 'scan':return scan();case 'analyze':return analyze(b);case 'export':{const blob=new Blob([JSON.stringify({exportedAt:new Date().toISOString(),competitions:all(),saved:state.saved,scans:state.scans},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='拾赛-线索备份.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}}if(b.classList.contains('close'))$('#dialog').close();});
-document.addEventListener('input',e=>{if(e.target.id==='search'){state.query=e.target.value;renderCards();}});
-document.addEventListener('change',e=>{if(e.target.id==='category')state.category=e.target.value;else if(e.target.id==='sort')state.sort=e.target.value;else if(e.target.id==='zero')state.zero=e.target.checked;else return;renderCards();});
-document.addEventListener('submit',e=>{if(e.target.id!=='add-form')return;e.preventDefault();const form=Object.fromEntries(new FormData(e.target));let url;try{url=new URL(form.url);if(!['http:','https:'].includes(url.protocol))throw 0;}catch{return toast('请填写完整的 http 或 https 原文链接。');}if(all().some(c=>c.url===url.href))return toast('这条原文链接已经收录。');const a=state.analysis;const c={id:crypto.randomUUID(),title:form.title.trim(),url:url.href,category:a?.category||'待分类',summary:a?.summary||form.text.trim().slice(0,400)||'已保存原文链接，主要内容等待核实。',source:'手动添加 · '+url.hostname,deadline:null,dateNote:'报名日期待人工核实',prize:null,prizeLabel:'现金奖金待核实',prizeNote:a?.prizeNote||'尚未核实。',fee:'unknown',noExtraCost:false,costNote:a?.costNote||'报名、工具、算力和差旅费用均待核实。',fit:'medium',fitReason:a?.fitReason||'等待核实任务要求与工作量。',aiNote:a?.aiNote||'待核实',crowd:'未核实',checked:today,references:[{title:'原始线索',url:url.href}]};state.imports.unshift(c);save('imports',state.imports);state.view='radar';state.tab='current';state.zero=false;state.category='全部类型';state.query='';$('#dialog').close();render();toast('已保存为待核实线索；AI 摘要不会自动确认零成本。');});
-$('#dialog').addEventListener('click',e=>{if(e.target===$('#dialog'))$('#dialog').close();});
-Promise.all([fetch('/api/data').then(r=>{if(!r.ok)throw new Error('数据加载失败');return r.json();}),fetch('/api/status').then(r=>r.ok?r.json():null).catch(()=>null)]).then(([data,api])=>{state.data=data;state.api=api;render();}).catch(()=>{$('#main').innerHTML='<div class="empty"><h2>暂时无法加载线索</h2><p>请检查网络后重新打开页面。</p><a class="secondary" href="/">重新加载</a></div>';});
+const $ = (selector) => document.querySelector(selector);
+const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+}[char]));
+const safeUrl = (value) => {
+  try {
+    const url = new URL(value);
+    return ['http:', 'https:'].includes(url.protocol) ? esc(url.href) : '#';
+  } catch {
+    return '#';
+  }
+};
+
+const STATUS = { open: '报名中', soon: '即将报名', upcoming: '下一届预告' };
+const STATUS_RANK = { open: 0, soon: 1, upcoming: 2 };
+const FEE_RANK = { free: 0, paid: 1, unknown: 2 };
+let data = null;
+
+function formatTime(iso) {
+  if (!iso) return '';
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  return new Intl.DateTimeFormat('zh-CN', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
+}
+
+function startKey(item) {
+  const match = item.date.match(/(20\d{2})(?:-| 年 )(\d{1,2})/);
+  return match ? `${match[1]}-${match[2].padStart(2, '0')}` : '9999-99';
+}
+
+function deadlineKey(item) {
+  return item.deadline || startKey(item);
+}
+
+function sortedCompetitions() {
+  return [...data.competitions].sort((a, b) => {
+    const byStatus = STATUS_RANK[a.status] - STATUS_RANK[b.status];
+    if (byStatus) return byStatus;
+    const byDate = deadlineKey(a).localeCompare(deadlineKey(b));
+    if (byDate) return byDate;
+    if (a.feeType !== b.feeType) return FEE_RANK[a.feeType] - FEE_RANK[b.feeType];
+    return a.name.localeCompare(b.name, 'zh-CN');
+  });
+}
+
+function renderMeta(list) {
+  const free = list.filter((item) => item.feeType === 'free').length;
+  const paid = list.filter((item) => item.feeType === 'paid').length;
+  const unknown = list.filter((item) => item.feeType === 'unknown').length;
+  $('#meta').innerHTML = [
+    `更新 <b>${esc(data.verifiedDate.replaceAll('-', '.'))}</b>`,
+    `<b>${list.length}</b> 项`,
+    `已核实免费 <b>${free}</b>`,
+    `写明收费 <b>${paid}</b>`,
+    `待核实 <b>${unknown}</b>`,
+  ].map((text) => `<span>${text}</span>`).join('');
+  $('#updated').textContent = data.verifiedDate;
+}
+
+function renderNow(list) {
+  const picks = list
+    .filter((item) => item.status !== 'upcoming')
+    .sort((a, b) => STATUS_RANK[a.status] - STATUS_RANK[b.status])
+    .slice(0, 4);
+  const section = $('#now');
+  if (!picks.length) {
+    section.hidden = true;
+    return;
+  }
+  section.hidden = false;
+  section.innerHTML = '<span class="now-label">近期可报</span>' + picks.map((item) => `
+    <a href="${safeUrl(item.url)}" target="_blank" rel="noopener noreferrer">
+      <b>${esc(item.name)}</b>
+      <small>${esc(STATUS[item.status])} · ${esc(item.now || item.dateNote)}</small>
+    </a>`).join('');
+}
+
+function renderAwards(list) {
+  const picks = list.filter((item) => item.tags.some((tag) => /获奖率|省奖|个奖/.test(tag)));
+  const section = $('#awards');
+  if (!picks.length) {
+    section.hidden = true;
+    return;
+  }
+  section.hidden = false;
+  section.innerHTML = '<span class="now-label">获奖率/名额已知</span>' + picks.map((item) => {
+    const tag = item.tags.find((value) => /获奖率|省奖|个奖/.test(value));
+    const prize = item.prize.split('；')[0];
+    return `<a href="${safeUrl(item.url)}" target="_blank" rel="noopener noreferrer">
+      <b>${esc(item.name)}</b>
+      <small>${esc(tag)} · ${esc(prize)}</small>
+    </a>`;
+  }).join('');
+}
+
+function renderTable(list) {
+  $('#rows').innerHTML = list.map((item) => {
+    const feeClass = item.feeType;
+    const feeText = item.feeType === 'free' ? '已核实免费' : item.feeType === 'paid' ? '收费' : '待核实';
+    const feeDetail = item.feeType === 'free'
+      ? esc(item.feeNote)
+      : `<b>${esc(item.fee)}</b><br>${esc(item.feeNote)}`;
+    return `<tr>
+      <td data-label="比赛">
+        <span class="comp-name">${esc(item.name)}</span>
+        <span class="comp-org">${esc(item.organizer)}</span>
+        <div class="tags">${item.tags.map((tag) => `<span class="tag">${esc(tag)}</span>`).join('')}${item.path === 'school' ? '<span class="tag warn">需校赛</span>' : ''}</div>
+      </td>
+      <td data-label="主要内容"><p class="summary">${esc(item.summary)}</p></td>
+      <td data-label="日期">
+        <span class="date-main">${esc(item.date)}</span>
+        <span class="date-note">${esc(item.dateNote)}</span>
+        <span class="status ${item.status}">${esc(STATUS[item.status])}</span>
+      </td>
+      <td data-label="奖金"><p class="prize">${esc(item.prize)}</p></td>
+      <td data-label="费用">
+        <span class="fee ${feeClass}">${feeText}</span>
+        <span class="fee-note">${feeDetail}</span>
+      </td>
+      <td data-label="官网">
+        <div class="links">
+          <a href="${safeUrl(item.url)}" target="_blank" rel="noopener noreferrer">官网 ↗</a>
+          <a class="evidence" href="${safeUrl(item.evidence.url)}" target="_blank" rel="noopener noreferrer">费用依据</a>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  $('#table-note').textContent = '按报名时间排：报名中 → 即将报名 → 下一届；同月免费优先';
+}
+
+function monitorClass(source, result) {
+  if (!source.monitorUrl) return 'manual';
+  if (!result) return '';
+  if (result.status !== 'ok') return 'error';
+  return result.changed ? 'changed' : 'ok';
+}
+
+function monitorText(source, result) {
+  if (!source.monitorUrl) return '手动入口 · 回官网核实';
+  if (!result) return '本次未检查';
+  if (result.status !== 'ok') return `需人工打开 · ${result.message || '页面不可读'}`;
+  if (result.via === 'reader') return result.changed ? '阅读代理读取 · 有变化' : '阅读代理读取 · 暂未发现变化';
+  if (result.changed) return '发现页面变化 · 需人工确认';
+  return '可访问 · 暂未发现变化';
+}
+
+function renderSources() {
+  const monitor = data.monitor || { checkedAt: null, results: [] };
+  const results = new Map((monitor.results || []).map((item) => [item.id, item]));
+  const automatic = data.sources.filter((item) => item.monitorUrl);
+  const ok = automatic.filter((item) => results.get(item.id)?.status === 'ok').length;
+  const changed = automatic.filter((item) => results.get(item.id)?.changed).length;
+  const manual = automatic.length - ok;
+
+  $('#source-count').textContent = monitor.checkedAt
+    ? `${data.sources.length} 个入口 · 上次 ${formatTime(monitor.checkedAt)}`
+    : `${data.sources.length} 个入口 · 尚未检查`;
+  $('#monitor-note').textContent = monitor.checkedAt
+    ? `自动检查 ${automatic.length} 个：${ok} 个可读取，${changed} 个有变化，${manual} 个需人工`
+    : `共 ${data.sources.length} 个入口，其中 ${automatic.length} 个可自动检查；先点一次建立基线。`;
+
+  const mainSources = data.sources.filter((source) => !source.more);
+  const moreSources = data.sources.filter((source) => source.more);
+
+  $('#source-grid').innerHTML = mainSources.map((source) => {
+    const result = results.get(source.id);
+    const cls = monitorClass(source, result);
+    const link = result?.changed && result.links?.[0]
+      ? `<a class="source-new" href="${safeUrl(result.links[0].url)}" target="_blank" rel="noopener noreferrer">新：${esc(result.links[0].title)}</a>`
+      : '';
+    return `<article class="source">
+      <div class="source-head">
+        <a href="${safeUrl(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.name)} ↗</a>
+        <i class="dot ${cls}" title="${esc(monitorText(source, result))}"></i>
+      </div>
+      <span class="source-platform">${esc(source.platform)} · ${source.monitorUrl ? '自动检查' : '手动'}</span>
+      <p>${esc(source.description)}</p>
+      <span class="source-check">${esc(monitorText(source, result))}</span>
+      ${link}
+    </article>`;
+  }).join('');
+
+  const more = $('#more-sources');
+  if (!moreSources.length) {
+    more.hidden = true;
+    return;
+  }
+  more.hidden = false;
+  more.innerHTML = '<span class="more-label">更多平台入口</span>' + moreSources.map((source) => (
+    `<a href="${safeUrl(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.name)}</a>`
+  )).join('');
+}
+
+function render() {
+  const list = sortedCompetitions();
+  renderMeta(list);
+  renderNow(list);
+  renderAwards(list);
+  renderTable(list);
+  renderSources();
+}
+
+async function checkSources() {
+  const button = $('#check');
+  button.disabled = true;
+  button.textContent = '检查中…';
+  $('#monitor-note').textContent = '正在读取公开页面，可能需要 10–30 秒…';
+  try {
+    const response = await fetch('/api/check', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: '{}',
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || '检查失败');
+    const previous = new Map((data.monitor?.results || []).map((item) => [item.id, item]));
+    for (const item of payload.results) {
+      const before = previous.get(item.id);
+      item.changed = Boolean(item.status === 'ok' && before?.fingerprint && before.fingerprint !== item.fingerprint);
+    }
+    data.monitor = { checkedAt: new Date().toISOString(), results: payload.results };
+    renderSources();
+  } catch (error) {
+    $('#monitor-note').textContent = error.message || '检查失败，请稍后再试。';
+  } finally {
+    button.disabled = false;
+    button.textContent = '检查更新';
+  }
+}
+
+fetch('/api/data')
+  .then((response) => {
+    if (!response.ok) throw new Error('数据加载失败');
+    return response.json();
+  })
+  .then((payload) => {
+    data = payload;
+    render();
+  })
+  .catch(() => {
+    $('#rows').innerHTML = '<tr><td colspan="6" class="loading">暂时无法加载赛事表，请刷新页面。</td></tr>';
+    $('#meta').textContent = '数据加载失败';
+    $('#source-count').textContent = '数据加载失败';
+  });
+
+$('#check').addEventListener('click', checkSources);

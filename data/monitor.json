@@ -1,0 +1,621 @@
+{
+  "checkedAt": "2026-10-24T05:48:44.159Z",
+  "results": [
+    {
+      "id": "tianchi",
+      "url": "https://tianchi.aliyun.com/competition",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:50.027Z",
+      "fingerprint": "98a7fd194f1aa7bf2bc1500f14615cb56e35074b01529ca2ce7d83542403e9d0",
+      "links": [
+        {
+          "title": "天池大赛",
+          "url": "https://tianchi.aliyun.com/competition/"
+        },
+        {
+          "title": "天池大赛",
+          "url": "https://tianchi.aliyun.com/"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "xfyun",
+      "url": "https://challenge.xfyun.cn/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:50.038Z",
+      "fingerprint": "f9b8f5ef67c2cdc12a725ccec49a9541a726ca844a71bdf484fd24737d1c7945",
+      "links": [
+        {
+          "title": "关于大赛",
+          "url": "https://challenge.xfyun.cn/about"
+        },
+        {
+          "title": "更多赛事",
+          "url": "https://challenge.xfyun.cn/competition"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "datafountain",
+      "url": "https://www.datafountain.cn/competitions",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:50.041Z",
+      "fingerprint": "c75ce2149d5ccc8e98be191b0e9b153410795db50848bce8c9457ce07681e6ab",
+      "links": [
+        {
+          "title": "“猎鹰·微波智探”—雷达多目标智能探测与识别挑战",
+          "url": "https://www.datafountain.cn/competitions/1166"
+        },
+        {
+          "title": "红外智感—红外开放世界全模态分割挑战",
+          "url": "https://www.datafountain.cn/competitions/1164"
+        },
+        {
+          "title": "多模态感知融合增强的具身自主抓取任务挑战",
+          "url": "https://www.datafountain.cn/competitions/1163"
+        },
+        {
+          "title": "多模态BadCase极限挑战赛",
+          "url": "https://www.datafountain.cn/competitions/1104"
+        },
+        {
+          "title": "盲区突围：模型BadCase极限挑战赛",
+          "url": "https://www.datafountain.cn/competitions/1097"
+        },
+        {
+          "title": "中文开源数据集驱动中文大模型智能跃迁挑战赛",
+          "url": "https://www.datafountain.cn/competitions/1098"
+        },
+        {
+          "title": "提升大模型推理与微调效率：vLLM与LlaMa-Factory性能优化挑战",
+          "url": "https://www.datafountain.cn/competitions/1099"
+        },
+        {
+          "title": "2026 6G/B6G 无线通信AI大赛",
+          "url": "https://www.datafountain.cn/special/WAIC-20266GAI"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "modelscope",
+      "url": "https://modelscope.cn/competition",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:50.041Z",
+      "fingerprint": "d1bd549c4f564fefe1088f6b1a3f3d2b0dc2bd0956413f0a405e8949285f785e",
+      "links": [
+        {
+          "title": "首届机器人嘉年华 进行中 【探月具身智能社区】首届机器人嘉年华，寻找35个顶级机器人 Demo 团队 开发者线下沙龙 类型 北京 地点 2026-10-28 15:59 报名截止 主办方 立即报名",
+          "url": "https://modelscope.cn/events/390/%E6%B4%BB%E5%8A%A8%E4%BB%8B%E7%BB%8D"
+        },
+        {
+          "title": "一万个回答·AI文化造物黑客松 进行中 文化的未来，不能只靠传承，更需要有人敢于创造！👋 黑客松 类型 6.6万元现金奖金＋7万元Token支持 奖励 2026-10-31 15:59 报名截止 主办方 立即报名",
+          "url": "https://modelscope.cn/events/389/%E6%AF%94%E8%B5%9B%E8%AF%A6%E6%83%85"
+        },
+        {
+          "title": "ROS秋季学校2026报名冲刺期，来练一身“具身”本领！ 进行中 人形机器人、多形态机器人正加速从实验室走进产业。可真到了投简历、上项目的关口，很多同学会发现：看过不少论文，却没真正摸过真机。 这一次，机会来了—— ROS秋季学校 2026将于10月30日—11月1日在杭州举办。",
+          "url": "https://modelscope.cn/events/388/%E5%86%85%E5%AE%B9%E4%BB%8B%E7%BB%8D"
+        },
+        {
+          "title": "群核科技Ahoolo 全球3D AI黑客松 进行中 本届黑客松，我们不设命题。只需你使用3D生成模型Aholo Lux3D，完成一份3D AI作品或Demo。 黑客松 类型 ¥32万元奖金池 奖励 2026-11-19 15:59 报名截止 主办方 立即报名",
+          "url": "https://modelscope.cn/events/386/%E6%AF%94%E8%B5%9B%E4%BB%8B%E7%BB%8D"
+        },
+        {
+          "title": "群核科技Aholo全球3D AI黑客松暨线下Workshop面对面·深圳站 进行中 3D AI领域的专家学者与资深从业者将亲自坐镇，围绕作品设计与技术应用，与你面对面深度交流。这里，是不同基础的选手打通从0到1技术路径的入门通道，也是提前组队、打磨作品的公开练兵场。 开发者线下沙",
+          "url": "https://modelscope.cn/events/387/%E6%B4%BB%E5%8A%A8%E4%BB%8B%E7%BB%8D"
+        },
+        {
+          "title": "天猫 AI 黑客松·高校挑战赛 进行中 AI 正在成为年轻人面向未来的必备能力。天猫 AI 黑客松，旨在连接高校年轻人与真实技术、品牌及产业场景，邀请每一个敢想敢做的人，把 AI 创想真正做出来，让创造走进现实。 黑客松 类型 ¥20万元 奖励 2026-10-21 15:59 ",
+          "url": "https://modelscope.cn/events/383/%E6%AF%94%E8%B5%9B%E4%BB%8B%E7%BB%8D"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "ospp",
+      "url": "https://summer.ospp.ac.cn/",
+      "status": "error",
+      "checkedAt": "2026-10-24T05:47:50.042Z",
+      "message": "页面需要浏览器或人工验证",
+      "changed": false,
+      "fingerprint": "134b4a19a4b722fb8c87c3f3adf190580031113f825569e5e8a7ab05f88d95d6"
+    },
+    {
+      "id": "ccf",
+      "url": "https://www.ccf.org.cn/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:50.043Z",
+      "fingerprint": "34bb37b956c8f4f53265d307288553e4412bb360f47b3a5807acab600983395e",
+      "links": [
+        {
+          "title": "2026&#32;CCF企业数字化发展案例征集结果公示",
+          "url": "https://www.ccf.org.cn/Focus/2026-10-14/939991.shtml"
+        },
+        {
+          "title": "2026年《CCF技术公益案例集》入选案例名单公示",
+          "url": "https://www.ccf.org.cn/Focus/2026-10-02/939357.shtml"
+        },
+        {
+          "title": "关于2025年度中国计算机学会教材出版资助项目评选结果公示的通知",
+          "url": "https://www.ccf.org.cn/Chapters/TC/News_/2026-01-12/856630.shtml"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "cmathc",
+      "url": "https://www.cmathc.org.cn/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:52.792Z",
+      "fingerprint": "b8fc0325243793c992c16d683983c835619dbd8bab090a182415ccf76144d556",
+      "links": [
+        {
+          "title": "--> 全国大学生数学竞赛命题专家白名单拟增选专家公示 --> <!--",
+          "url": "https://www.cmathc.org.cn/xwdt/651.html"
+        },
+        {
+          "title": "全国大学生数学竞赛推荐参加第40届全国青少年科技创新大赛选手名单",
+          "url": "https://www.cmathc.org.cn/xwdt/521.html"
+        },
+        {
+          "title": "第十八届全国大学生数学竞赛天津赛区报名通知",
+          "url": "https://www.cmathc.org.cn/sqtz/656.html"
+        },
+        {
+          "title": "关于第十八届全国大学生数学竞赛（云南赛区）报名通知",
+          "url": "https://www.cmathc.org.cn/sqtz/646.html"
+        },
+        {
+          "title": "2026年“高教社杯”江苏省高等学校第二十三届高等数学竞赛获奖名单公示",
+          "url": "https://www.cmathc.org.cn/csmd/546.html"
+        },
+        {
+          "title": "2026年丘成桐大学生数学竞赛总决赛入围名单及笔试优胜奖公示",
+          "url": "https://www.cmathc.org.cn/csmd/533.html"
+        },
+        {
+          "title": "2026年第七届MathorCup数学应用挑战赛—大数据竞赛初赛赛题发布",
+          "url": "https://www.cmathc.org.cn/mcm/st/668.html"
+        },
+        {
+          "title": "2026年安徽省大学生数学能力大赛数学建模赛道初评排名及复评名单",
+          "url": "https://www.cmathc.org.cn/mcm/news/649.html"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "52jingsai",
+      "url": "https://www.52jingsai.com/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:54.134Z",
+      "fingerprint": "dd86f7dbd719c26d66a1a0bc5818d6d48cd395fbe974997d6ff91c34d0135ba4",
+      "links": [],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": true
+    },
+    {
+      "id": "baltamatica",
+      "url": "https://www.baltamatica.com/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:54.272Z",
+      "fingerprint": "5368bcf3362c02d38ea6fb55e9bef0846022daf1d7ae43067e08d5c5c003dba2",
+      "links": [
+        {
+          "title": "2025年全国大学生数学建模竞赛 赛题发布",
+          "url": "https://www.baltamatica.com/activity/show/15.html"
+        },
+        {
+          "title": "北太天元科学计算开发者大赛2026年获奖名单公示暨汇展活动及颁奖典礼邀请",
+          "url": "https://www.baltamatica.com/news/show/1792738061.html"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "moonbit",
+      "url": "https://www.moonbitlang.cn/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:55.960Z",
+      "fingerprint": "94722b04a6c0630f9bdf9719c62322e8f0572f837f52de53caea91d84f3a5e4c",
+      "links": [
+        {
+          "title": "2024 MoonBit 编程挑战赛",
+          "url": "https://www.moonbitlang.cn/2024-mgpic"
+        },
+        {
+          "title": "2025 MoonBit 编程挑战赛",
+          "url": "https://www.moonbitlang.cn/2025-mgpic"
+        },
+        {
+          "title": "2026 MoonBit 软件合成挑战赛",
+          "url": "https://www.moonbitlang.cn/2026-scc"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "fwwb",
+      "url": "http://www.fwwb.org.cn/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:57.184Z",
+      "fingerprint": "fe460a8ef5349fb94dafa3db97a5e8022531ce6068d41b4621dee0f9003d7f8e",
+      "links": [
+        {
+          "title": "大赛公告",
+          "url": "https://www.fwwb.org.cn/public/index"
+        },
+        {
+          "title": "本届赛题",
+          "url": "https://www.fwwb.org.cn/topic/index"
+        },
+        {
+          "title": "大赛新闻",
+          "url": "https://www.fwwb.org.cn/news/index"
+        },
+        {
+          "title": "大赛花絮",
+          "url": "https://www.fwwb.org.cn/activity/index"
+        },
+        {
+          "title": "大赛视频",
+          "url": "https://www.fwwb.org.cn/video/index"
+        },
+        {
+          "title": "关于大赛",
+          "url": "https://www.fwwb.org.cn/about/index"
+        },
+        {
+          "title": "大赛公告",
+          "url": "https://www.fwwb.org.cn/#"
+        },
+        {
+          "title": "第十七届中国大学生服务外包创新创业大赛全国赛获奖团 ...",
+          "url": "https://www.fwwb.org.cn/news/show/663"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "huawei-algo",
+      "url": "https://developer.huaweicloud.com/hackathon",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:57.252Z",
+      "fingerprint": "9fe29bb3d95759deb522c386a17aa9194966f9b17a0b616d1eef545692c48c43",
+      "links": [
+        {
+          "title": "立即报名",
+          "url": "https://developer.huaweicloud.com/competition/information/1300000270"
+        },
+        {
+          "title": "立即报名",
+          "url": "https://developer.huaweicloud.com/competition/information/1300000256/circumstance"
+        },
+        {
+          "title": "立即报名",
+          "url": "https://developer.huaweicloud.com/competition/information/1300000215"
+        },
+        {
+          "title": "昇腾AI算法挑战赛 （截止日期：2026年2月28日） 作为华为开发者大赛与华为算法挑战赛的共同子赛道，昇腾AI算法挑战赛依托两大IP，旨在汇聚全球各领域的优秀开发者同台竞技。开放昇腾AI计算平台的全栈能力与API资源，鼓励开发者构建高效创新的AI模型，解决实际场景问题。 立即报",
+          "url": "https://developer.huaweicloud.com/competition/information/1300000204/introduction"
+        },
+        {
+          "title": "立即报名",
+          "url": "https://developer.huaweicloud.com/competition/information/1300000188/introduction"
+        },
+        {
+          "title": "立即报名",
+          "url": "https://developer.huaweicloud.com/competition/information/1300000185/introduction"
+        },
+        {
+          "title": "立即报名",
+          "url": "https://developer.huaweicloud.com/competition/information/1300000180/introduction"
+        },
+        {
+          "title": "立即报名",
+          "url": "https://developer.huaweicloud.com/competition/information/1300000171/introduction"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "openatom",
+      "url": "https://competition.openatom.tech/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:57.808Z",
+      "fingerprint": "23bf8e5756340ce10306e283e48b60dc1edf76c8f2ef39b9afed7536af22030e",
+      "links": [
+        {
+          "title": "比赛",
+          "url": "https://competition.openatom.tech/competition"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "aitop100",
+      "url": "https://www.aitop100.cn/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:58.564Z",
+      "fingerprint": "77da120ead917584db43813ee94ac7f5ac70f1cdcc5c80d8ddc025ab33fb11a0",
+      "links": [
+        {
+          "title": "AI创作大赛",
+          "url": "https://www.aitop100.cn/aicreation"
+        },
+        {
+          "title": "第二届“五台万象·艺术造境”文旅设计大赛 第二届“五台万象·艺术造境”文旅设计大赛开启全国征集，三大赛道支持AI辅助创作",
+          "url": "https://www.aitop100.cn/infomation/details/34781.html"
+        },
+        {
+          "title": "评审中 第二届中国（澳门）国际动画电影节 大赛时间： 2026/08-12 - 2026/10-10",
+          "url": "https://www.aitop100.cn/aicreation/index.html?id=45&type=video"
+        },
+        {
+          "title": "已结束 织金洞AIGC视频创意挑战赛 大赛时间： 2026/07-20 - 2026/08-23",
+          "url": "https://www.aitop100.cn/aicreation/index.html?id=44&type=video"
+        },
+        {
+          "title": "已结束 “太空追梦，成就未来” 喜之郎首届AIGC创想大赛 大赛时间： 2026/05-25 - 2026/06-30",
+          "url": "https://www.aitop100.cn/aicreation/index.html?id=43&type=video"
+        },
+        {
+          "title": "已结束 2026徐闻菠萝AIGC大赛 大赛时间： 2026/03-16 - 2026/05-05",
+          "url": "https://www.aitop100.cn/aicreation/index.html?id=42&type=video"
+        },
+        {
+          "title": "已结束 首届浙西大学生AIGC视频创意大赛 大赛时间： 2025/10-20 - 2025/12-10",
+          "url": "https://www.aitop100.cn/aicreation/index.html?id=41&type=video"
+        },
+        {
+          "title": "已结束 AI功夫短片全球征集赛 大赛时间： 2025/10-11 - 2025/11-21",
+          "url": "https://www.aitop100.cn/aicreation/index.html?id=40&type=video"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": true
+    },
+    {
+      "id": "waytoagi",
+      "url": "https://www.waytoagi.com/events",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:47:59.805Z",
+      "fingerprint": "45660449ddcdf37da8601767b509efbb5be1eac3e9e4e74723bd4aafba6b77e9",
+      "links": [],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "devpost",
+      "url": "https://devpost.com/hackathons",
+      "status": "ok",
+      "via": "reader",
+      "checkedAt": "2026-10-24T05:48:00.844Z",
+      "fingerprint": "fcf7e5162fa281ab9386eea6cfd4b9cfd1355a75b8c069b11b81f2bcde7d9f9a",
+      "links": [],
+      "message": "直接访问被拦，已通过阅读代理读取；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "kaggle",
+      "url": "https://www.kaggle.com/competitions",
+      "status": "ok",
+      "via": "reader",
+      "checkedAt": "2026-10-24T05:48:02.963Z",
+      "fingerprint": "8d8c9ca357436ad7dba9039c0927ccee97963b8874695822e044486c47137f05",
+      "links": [],
+      "message": "直接访问被拦，已通过阅读代理读取；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "aicrowd",
+      "url": "https://www.aicrowd.com/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:48:06.994Z",
+      "fingerprint": "6d434ed47e4f7d024d1c24960ff8c9b3acf046d7caa2a7e67156c39e9f8e0d64",
+      "links": [],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "gitlink",
+      "url": "https://www.gitlink.org.cn/",
+      "status": "ok",
+      "via": "reader",
+      "checkedAt": "2026-10-24T05:48:08.822Z",
+      "fingerprint": "3730f664a6b0916f8d1c8c15441ea596dccde047d0c3e93aad59bddad3810194",
+      "links": [],
+      "message": "直接访问被拦，已通过阅读代理读取；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "madio",
+      "url": "http://www.madio.net/",
+      "status": "error",
+      "checkedAt": "2026-10-24T05:48:09.131Z",
+      "message": "来源请求超时，请稍后重试。",
+      "changed": false,
+      "fingerprint": "dfdbed3849e1c79d9b5bd55f58f2e613f9ada39e0f7127f6c5fcf7580c31e9ab"
+    },
+    {
+      "id": "qbitai",
+      "url": "https://www.qbitai.com/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:48:09.295Z",
+      "fingerprint": "43c4d2f7dabbce551dc75a0f6470b37acca170aaed6abd5c1220bc7ca59a68c7",
+      "links": [
+        {
+          "title": "飞书豆包工作AI先锋未来人才大赛：企业正在争抢会用AI做成事的人",
+          "url": "https://www.qbitai.com/2026/10/504608.html"
+        },
+        {
+          "title": "AI先锋未来人才大赛",
+          "url": "https://www.qbitai.com/tag/ai%e5%85%88%e9%94%8b%e6%9c%aa%e6%9d%a5%e4%ba%ba%e6%89%8d%e5%a4%a7%e8%b5%9b"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": true
+    },
+    {
+      "id": "jiqizhixin",
+      "url": "https://www.jiqizhixin.com/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:48:09.873Z",
+      "fingerprint": "82ea455fa2b6b4e441e82fa2ed0b1a1c5e0dc3e10cd6c175fb5977296467f349",
+      "links": [],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": true
+    },
+    {
+      "id": "meituan-tech",
+      "url": "https://tech.meituan.com/",
+      "status": "ok",
+      "via": "reader",
+      "checkedAt": "2026-10-24T05:48:12.054Z",
+      "fingerprint": "bc6799891b86651f72ba88a14857b820d07175ccdfb1e98614ffbd5cf6353e9f",
+      "links": [],
+      "message": "直接访问被拦，已通过阅读代理读取；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "aliyun-dev",
+      "url": "https://developer.aliyun.com/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:48:13.003Z",
+      "fingerprint": "9381ec4a560cfb70fafd368afb83f43cea6e1520e8798ce2a16d1c4a2f836a7c",
+      "links": [],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "tencent-dev",
+      "url": "https://cloud.tencent.com/developer",
+      "status": "ok",
+      "via": "reader",
+      "checkedAt": "2026-10-24T05:48:16.608Z",
+      "fingerprint": "c65211729cdd56ce13cc84ab1cf865a714c2749243f97b9414c04cc8d5b7ca89",
+      "links": [],
+      "message": "直接访问被拦，已通过阅读代理读取；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "gitee",
+      "url": "https://gitee.com/",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:48:17.974Z",
+      "fingerprint": "962dd8b4952bfbd6eae47fa7899f1a92c4b8e5cf945014447c631636ff922e3a",
+      "links": [],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "dorahacks",
+      "url": "https://dorahacks.io/",
+      "status": "ok",
+      "via": "reader",
+      "checkedAt": "2026-10-24T05:48:20.031Z",
+      "fingerprint": "06ed4a8bf53741f66e7b6f6037f5048cfb2753cd925ed2408a90033e6cfa9ce6",
+      "links": [],
+      "message": "直接访问被拦，已通过阅读代理读取；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "competehub",
+      "url": "https://competehub.dev/zh",
+      "status": "ok",
+      "via": "direct",
+      "checkedAt": "2026-10-24T05:48:20.062Z",
+      "fingerprint": "d0ff97155b507db6f33260c34fd5803d4f8d837d5e2a33ce5509d53faf46c331",
+      "links": [
+        {
+          "title": "AI赛事通",
+          "url": "https://competehub.dev/zh"
+        },
+        {
+          "title": "提交比赛",
+          "url": "https://competehub.dev/zh/submit"
+        },
+        {
+          "title": "AI Agent 挑战赛 HackTalk：石杰瑞 机器学习/AI 网络安全 社会公益 线上 LUMA 明天截止",
+          "url": "https://competehub.dev/zh/competitions/lumac5c878c94238e93ac69a9a1f9b839924"
+        },
+        {
+          "title": "AI Agent 挑战赛 HackTalk：尤尔吉斯·凯梅基利斯 机器学习/AI 网络安全 机器人 线上 LUMA 明天截止",
+          "url": "https://competehub.dev/zh/competitions/luma5248679587c79e045dc714662c34b47e"
+        },
+        {
+          "title": "AI Agent 挑战赛 HackTalk：阮汉林 机器学习/AI 网络安全 线上 LUMA 明天截止",
+          "url": "https://competehub.dev/zh/competitions/luma7df1fb0694b2f916d90d659667d9dd8b"
+        },
+        {
+          "title": "黑客松 极客室全球AI黑客松 机器学习/AI 计算机视觉 区块链 线上 LUMA 22 天后截止",
+          "url": "https://competehub.dev/zh/competitions/luma7f335eff5d3a952f1290e2e373212405"
+        },
+        {
+          "title": "黑客松 乳腺癌意识黑客马拉松 机器学习/AI 健康 社会公益 Zürich LUMA 7 天后截止",
+          "url": "https://competehub.dev/zh/competitions/luma03dd18c493207c672655515e0b681352"
+        },
+        {
+          "title": "黑客松 德安萨黑客松4.0 机器学习/AI 新手友好 计算机视觉 Cupertino LUMA 29 天后截止",
+          "url": "https://competehub.dev/zh/competitions/luma6d49f3bb5cd76d465d7d38dd2c9d497d"
+        }
+      ],
+      "message": "已读取公开正文；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "huawei-dev",
+      "url": "https://developer.huawei.com/consumer/cn/activity/digixActivity/digixList",
+      "status": "ok",
+      "via": "reader",
+      "checkedAt": "2026-10-24T05:48:20.079Z",
+      "fingerprint": "6ba6399cb881860645a053d75e0802c581716a743ecee411d6659379890b57a0",
+      "links": [],
+      "message": "直接访问被拦，已通过阅读代理读取；变化不等于有新赛事。",
+      "changed": false
+    },
+    {
+      "id": "atomgit",
+      "url": "https://competitions.atomgit.com/",
+      "status": "ok",
+      "via": "reader",
+      "checkedAt": "2026-10-24T05:48:23.461Z",
+      "fingerprint": "7283fe14ca7ab6b3902145bfcef728035e80d84b690eaf6edd3cd628c30541fe",
+      "links": [],
+      "message": "直接访问被拦，已通过阅读代理读取；变化不等于有新赛事。",
+      "changed": false
+    }
+  ]
+}

@@ -1,6 +1,62 @@
-import {createServer} from 'node:http';
-import {readFileSync} from 'node:fs';
-import {handleApi} from '../lib/api.mjs';
-import {competitions,sources,verifiedDate} from '../lib/radar-data.ts';
-const assets={'/':['index.html','text/html; charset=utf-8'],'/app.js':['app.js','text/javascript; charset=utf-8'],'/style.css':['style.css','text/css; charset=utf-8'],'/favicon.svg':['favicon.svg','image/svg+xml']};
-createServer(async(req,res)=>{try{const url=new URL(req.url,'http://127.0.0.1:5173');let result;if(url.pathname.startsWith('/api/')){const headers=new Headers();for(const[k,v]of Object.entries(req.headers))if(v)headers.set(k,Array.isArray(v)?v.join(','):v);const chunks=[];let bytes=0;for await(const c of req){bytes+=c.length;if(bytes>60000){res.writeHead(413);res.end();return;}chunks.push(c);}const body=Buffer.concat(chunks);const request=new Request(url,{method:req.method,headers,...(!['GET','HEAD'].includes(req.method)?{body}: {})});result=await handleApi(request,{DEEPSEEK_API_KEY:process.env.DEEPSEEK_API_KEY,DEEPSEEK_MODEL:process.env.DEEPSEEK_MODEL,LOCAL_DEV:true},{competitions,sources,verifiedDate});}else{const asset=assets[url.pathname];result=asset?new Response(readFileSync(new URL('../public/'+asset[0],import.meta.url)),{headers:{'content-type':asset[1],'cache-control':'no-store'}}):new Response('Not found',{status:404});}res.writeHead(result.status,Object.fromEntries(result.headers));res.end(Buffer.from(await result.arrayBuffer()));}catch{res.writeHead(500);res.end('Internal error');}}).listen(5173,'127.0.0.1',()=>console.log('Local: http://127.0.0.1:5173'));
+import { createServer } from 'node:http';
+import { existsSync, readFileSync } from 'node:fs';
+import { handleApi } from '../lib/api.mjs';
+import { competitions, sources, verifiedDate } from '../lib/radar-data.ts';
+
+const monitor = existsSync('data/monitor.json')
+  ? JSON.parse(readFileSync('data/monitor.json', 'utf8'))
+  : { checkedAt: null, results: [] };
+const data = { competitions, sources, verifiedDate, monitor };
+const assets = {
+  '/': ['index.html', 'text/html; charset=utf-8'],
+  '/app.js': ['app.js', 'text/javascript; charset=utf-8'],
+  '/style.css': ['style.css', 'text/css; charset=utf-8'],
+  '/favicon.svg': ['favicon.svg', 'image/svg+xml'],
+};
+
+createServer(async (req, res) => {
+  try {
+    const url = new URL(req.url, 'http://127.0.0.1:5173');
+    let result;
+    if (url.pathname.startsWith('/api/')) {
+      const headers = new Headers();
+      for (const [key, value] of Object.entries(req.headers)) {
+        if (value) headers.set(key, Array.isArray(value) ? value.join(',') : value);
+      }
+      const chunks = [];
+      let bytes = 0;
+      for await (const chunk of req) {
+        bytes += chunk.length;
+        if (bytes > 60000) {
+          res.writeHead(413);
+          res.end();
+          return;
+        }
+        chunks.push(chunk);
+      }
+      const body = Buffer.concat(chunks);
+      const request = new Request(url, {
+        method: req.method,
+        headers,
+        ...(!['GET', 'HEAD'].includes(req.method) ? { body } : {}),
+      });
+      result = await handleApi(request, {
+        DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
+        DEEPSEEK_MODEL: process.env.DEEPSEEK_MODEL,
+        LOCAL_DEV: true,
+      }, data);
+    } else {
+      const asset = assets[url.pathname];
+      result = asset
+        ? new Response(readFileSync(new URL('../public/' + asset[0], import.meta.url)), {
+            headers: { 'content-type': asset[1], 'cache-control': 'no-store' },
+          })
+        : new Response('Not found', { status: 404 });
+    }
+    res.writeHead(result.status, Object.fromEntries(result.headers));
+    res.end(Buffer.from(await result.arrayBuffer()));
+  } catch {
+    res.writeHead(500);
+    res.end('Internal error');
+  }
+}).listen(5173, '127.0.0.1', () => console.log('Local: http://127.0.0.1:5173'));
