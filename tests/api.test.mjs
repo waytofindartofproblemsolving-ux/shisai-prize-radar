@@ -89,6 +89,27 @@ test('active script text is excluded from source fingerprint', () => {
   assert.equal(plainText('<script>alert(1)</script><p>报名</p><style>bad</style>'), '报名');
 });
 
+test('JSON API proxy blocks private hosts and returns public JSON', async () => {
+  const blocked = await handleApi(req('/api/fetch-json', { url: 'http://127.0.0.1:8080/secret' }), {}, data);
+  assert.equal(blocked.status, 400);
+
+  let called = false;
+  const response = await handleApi(
+    req('/api/fetch-json', { url: 'https://example.org/api', headers: { authorization: 'Bearer test' } }),
+    {},
+    data,
+    async (url, options) => {
+      called = true;
+      assert.equal(url, 'https://example.org/api');
+      assert.equal(options.headers.authorization, 'Bearer test');
+      return new Response(JSON.stringify({ items: [1, 2] }), { headers: { 'content-type': 'application/json' } });
+    },
+  );
+  assert.equal(response.status, 200);
+  assert.deepEqual((await response.json()).data, { items: [1, 2] });
+  assert.equal(called, true);
+});
+
 test('oversized and malformed model outputs fail closed', async () => {
   await assert.rejects(() => boundedText(new Response('1234567890'), 5));
   assert.throws(() => sanitizeAnalysis({ title: 'x' }));

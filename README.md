@@ -38,6 +38,17 @@ npm run monitor   # 检查信息源，写入 data/monitor.json
 
 需要定时跑时，用系统计划任务或 CI 每天执行一次 `npm run monitor` 即可。监测不是新赛事搜索器：它只告诉我们固定入口有没有变化，新比赛仍需从信息源里人工发现。
 
+## 网站内添加 API 信息源
+
+信息源页底部有“API 信息源”表单：填名称、JSON API 地址、可选 Headers、数据路径和字段名，就能添加并立即检查。
+
+- 配置保存在当前浏览器的 `localStorage`，不写进仓库、不上传服务器。
+- Headers 会经本站的 `POST /api/fetch-json` 服务端代理转发；代理只允许公网 `http/https`，拒绝 localhost/内网地址，15 秒超时，最多 2MB，且只接受 JSON。
+- 数据路径支持 `data.items` 这种点号路径；字段支持 `title`、`commit.message` 这种路径。
+- 检查结果会显示前几条，并用内容指纹判断是否有变化。
+- 只支持公开的 **GET JSON**；不支持 POST、OAuth、分页和需要登录的接口。
+- 长期 API Key 不要放在公用电脑的浏览器里；`localStorage` 能被同源脚本读取。
+
 ## DeepSeek 接入
 
 复制 `.env.example` 为 `.env.local`，填入 `DEEPSEEK_API_KEY`，然后 `npm run dev`。密钥只在服务端读取，前端不接收、不保存。
@@ -45,6 +56,7 @@ npm run monitor   # 检查信息源，写入 data/monitor.json
 - `GET /api/data`：赛事表、信息源和最近监测结果
 - `GET /api/status`：是否配置 Key
 - `POST /api/check`：即时检查信息源
+- `POST /api/fetch-json`：代理读取公开 JSON API（拒绝内网地址，限制超时/大小）
 - `POST /api/analyze`：从公告正文提取摘要、奖金和费用说明，输出始终标记 `verified: false`
 
 托管端用 Sites 的 runtime secret 配置同名变量。没有 Key 时返回 503，不调用模型。模型调用可能产生 API 费用。

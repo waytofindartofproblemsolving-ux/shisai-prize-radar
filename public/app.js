@@ -235,6 +235,188 @@ async function checkSources() {
   }
 }
 
+const API_STORE = 'shisai:api-sources';
+const API_CHECKS = 'shisai:api-checks';
+
+function readStore(key, fallback) {
+  try {
+    const value = JSON.parse(localStorage.getItem(key));
+    return value ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveStore(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // 浏览器禁用存储时只保留内存状态
+  }
+}
+
+let apiSources = readStore(API_STORE, []);
+let apiChecks = readStore(API_CHECKS, {});
+if (!Array.isArray(apiSources)) apiSources = [];
+if (!apiChecks || typeof apiChecks !== 'object' || Array.isArray(apiChecks)) apiChecks = {};
+
+function getPath(value, path) {
+  if (!path) return value;
+  return path.split('.').reduce((current, key) => (current == null ? undefined : current[key]), value);
+}
+
+function apiValue(item, field, fallbacks) {
+  const custom = field ? getPath(item, field) : undefined;
+  if (custom != null && custom !== '') return custom;
+  for (const key of fallbacks) {
+    const value = getPath(item, key);
+    if (value != null && value !== '') return value;
+  }
+  return '';
+}
+
+function normalizeApiItem(item, source) {
+  if (typeof item === 'string') return { title: item.slice(0, 160), url: '', date: '', prize: '' };
+  if (!item || typeof item !== 'object') return null;
+  const title = apiValue(item, source.fields?.title, ['title', 'name', 'competition', 'contest']);
+  if (!title) return null;
+  const rawUrl = apiValue(item, source.fields?.url, ['url', 'link', 'href']);
+  let url = '';
+  try {
+    url = rawUrl ? new URL(String(rawUrl), source.url).href : '';
+  } catch {
+    url = '';
+  }
+  return {
+    title: String(title).slice(0, 160),
+    url,
+    date: String(apiValue(item, source.fields?.date, ['date', 'deadline', 'start', 'time'])).slice(0, 60),
+    prize: String(apiValue(item, source.fields?.prize, ['prize', 'bonus', 'award'])).slice(0, 80),
+  };
+}
+
+function renderApiSources() {
+  const list = $('#api-list');
+  if (!list) return;
+  if (!apiSources.length) {
+    list.innerHTML = '<p class="api-empty">还没有 API 源。填上面的表单，添加一个返回 JSON 的接口。</p>';
+    return;
+  }
+  list.innerHTML = apiSources.map((source) => {
+    const check = apiChecks[source.id];
+    const status = !check ? '未检查' : check.error ? '检查失败' : check.changed ? '有更新' : '已读取';
+    const items = (check?.items || []).slice(0, 6).map((item) => {
+      const label = `${esc(item.title)}${item.date ? ` · ${esc(item.date)}` : ''}${item.prize ? ` · ${esc(item.prize)}` : ''}`;
+      return item.url
+        ? `<a href="${safeUrl(item.url)}" target="_blank" rel="noopener noreferrer">${label}</a>`
+        : `<span class="api-items"><em>${label}</em></span>`;
+    }).join('');
+    const error = check?.error ? `<div class="api-empty">${esc(check.error)}</div>` : '';
+    return `<article class="api-source">
+      <div class="api-source-head">
+        <strong>${esc(source.name)}</strong>
+        <span>${esc(status)}${check?.checkedAt ? ` · ${esc(formatTime(check.checkedAt))}` : ''}</span>
+      </div>
+      <small>${esc(source.url)}</small>
+      ${items ? `<div class="api-items">${items}</div>` : ''}
+      ${error}
+      <div class="api-actions">
+        <button type="button" data-api-check="${esc(source.id)}">检查</button>
+        <button type="button" data-api-del="${esc(source.id)}">删除</button>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+async function checkApiSource(source) {
+  try {
+    const response = await fetch('/api/fetch-json', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ url: source.url, headers: source.headers || {} }),
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || '读取失败');
+    const raw = getPath(payload.data, source.path || '');
+    const array = Array.isArray(raw) ? raw : (Array.isArray(raw?.items) ? raw.items : null);
+    if (!array) throw new Error(`数据路径“${source.path || '根'}”没有返回数组`);
+    const items = array.slice(0, 50).map((item) => normalizeApiItem(item, source)).filter(Boolean).slice(0, 12);
+    const fingerprint = JSON.stringify(items);
+    const before = apiChecks[source.id];
+    apiChecks[source.id] = {
+      checkedAt: new Date().toISOString(),
+      fingerprint,
+      items,
+      changed: Boolean(before?.fingerprint && before.fingerprint !== fingerprint),
+    };
+  } catch (error) {
+    apiChecks[source.id] = {
+      checkedAt: new Date().toISOString(),
+      error: String(error.message || error).slice(0, 160),
+      items: [],
+      changed: false,
+    };
+  }
+  saveStore(API_CHECKS, apiChecks);
+  renderApiSources();
+}
+
+$('#api-form')?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const name = $('#api-name').value.trim();
+  const url = $('#api-url').value.trim();
+  let headers = {};
+  const rawHeaders = $('#api-headers').value.trim();
+  if (rawHeaders) {
+    try {
+      headers = JSON.parse(rawHeaders);
+    } catch {
+      $('#api-list').innerHTML = '<p class="api-empty">Headers 不是合法 JSON。</p>';
+      return;
+    }
+  }
+  if (!name || !url) return;
+  const source = {
+    id: typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : String(Date.now()),
+    name,
+    url,
+    headers: headers && typeof headers === 'object' && !Array.isArray(headers) ? headers : {},
+    path: $('#api-path').value.trim(),
+    fields: {
+      title: $('#api-title').value.trim() || 'title',
+      url: $('#api-link').value.trim() || 'url',
+      date: $('#api-date').value.trim() || 'date',
+      prize: $('#api-prize').value.trim() || 'prize',
+    },
+  };
+  apiSources.push(source);
+  saveStore(API_STORE, apiSources);
+  event.target.reset();
+  renderApiSources();
+  checkApiSource(source);
+});
+
+$('#api-list')?.addEventListener('click', (event) => {
+  const checkButton = event.target.closest('[data-api-check]');
+  if (checkButton) {
+    const source = apiSources.find((item) => item.id === checkButton.dataset.apiCheck);
+    if (source) checkApiSource(source);
+    return;
+  }
+  const deleteButton = event.target.closest('[data-api-del]');
+  if (deleteButton) {
+    const source = apiSources.find((item) => item.id === deleteButton.dataset.apiDel);
+    if (!source || !confirm(`删除 API 源“${source.name}”？`)) return;
+    apiSources = apiSources.filter((item) => item.id !== source.id);
+    delete apiChecks[source.id];
+    saveStore(API_STORE, apiSources);
+    saveStore(API_CHECKS, apiChecks);
+    renderApiSources();
+  }
+});
+
+renderApiSources();
+
 fetch('/api/data')
   .then((response) => {
     if (!response.ok) throw new Error('数据加载失败');
