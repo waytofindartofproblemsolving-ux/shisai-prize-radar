@@ -132,7 +132,7 @@ function renderTable(list) {
       </td>
     </tr>`;
   }).join('');
-  $('#table-note').textContent = '按报名时间排：报名中 → 即将报名 → 下一届；同月免费优先';
+  $('#table-note').textContent = '按最早报名/提交截止排：报名中 → 即将报名 → 下一届；同月免费优先';
 }
 
 function monitorClass(source, result) {
